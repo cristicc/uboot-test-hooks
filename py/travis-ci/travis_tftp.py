@@ -1,6 +1,26 @@
 import os
 import binascii
 
+def efifit2env(addr=None):
+    """Create dictionary describing file for EFI fit image test
+
+    @addr:      address used for loading the file as int (e.g. 0x40400000)
+    Return:     dictionary describing the file with entries
+                * fn    - filename
+                * addr  - loading address, optional
+                * dn    - tftp directory
+    """
+    tftp_dir = os.environ['UBOOT_TRAVIS_BUILD_DIR']
+
+    ret = {
+        "fn": "test-efi-fit.img",
+        "dn": tftp_dir,
+    }
+    if addr is not None:
+        ret['addr'] = addr
+
+    return ret
+
 def file2env(file_name, addr=None):
     """Create dictionary describing file
 

@@ -8,3 +8,5 @@ env__efi_loader_helloworld_file = travis_tftp.file2env('lib/efi_loader/helloworl
 
 env__efi_loader_check_smbios = True
 env__efi_loader_grub_file = travis_tftp.file2env('grub_x64.efi')
+
+env__efi_fit_tftp_file = travis_tftp.efifit2env()
