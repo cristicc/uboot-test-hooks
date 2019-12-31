@@ -1,23 +1,34 @@
 import os
 import binascii
 
-def efifit2env(addr=None):
+def efifit2env(file_name=None, addr=None):
     """Create dictionary describing file for EFI fit image test
 
+    @filename:  name of the file to be described
     @addr:      address used for loading the file as int (e.g. 0x40400000)
     Return:     dictionary describing the file with entries
-                * fn    - filename
-                * addr  - loading address, optional
                 * dn    - tftp directory
+                * fn    - filename, optional
+                * size  - file size in bytes, optional
+                * crc32 - checksum using CRC-32 algorithm, optional
+                * addr  - loading address, optional
     """
     tftp_dir = os.environ['UBOOT_TRAVIS_BUILD_DIR']
 
     ret = {
-        "fn": "test-efi-fit.img",
-        "dn": tftp_dir,
+        'dn': tftp_dir,
     }
+
     if addr is not None:
         ret['addr'] = addr
+
+    if file_name:
+        file_full = tftp_dir + '/' + file_name
+        if os.path.isfile(file_full):
+            ret['fn'] = file_name
+            ret['size'] = os.path.getsize(file_full)
+            with open(file_full, 'rb') as f:
+                ret['crc32'] = hex(binascii.crc32(f.read()) & 0xffffffff)[2:]
 
     return ret
 
